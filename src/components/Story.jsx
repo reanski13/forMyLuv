@@ -1,83 +1,118 @@
 import { motion } from 'framer-motion'
-import { useInView } from "framer-motion"
+import SectionHeader from './SectionHeader'
+import myAlways from "../assets/always.jpg";
+
+
+const fadeLeft  = { hidden: { opacity: 0, x: -36 }, visible: { opacity: 1, x: 0, transition: { duration: 0.85 } } }
+const fadeRight = { hidden: { opacity: 0, x:  36 }, visible: { opacity: 1, x: 0, transition: { duration: 0.85, delay: 0.1 } } }
 
 export default function Story() {
-  const { ref: leftRef, inView: leftInView } = useInView({ threshold: 0.3 })
-  const { ref: rightRef, inView: rightInView } = useInView({ threshold: 0.3 })
-
-  const leftVariants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
-  }
-
-  const rightVariants = {
-    hidden: { opacity: 0, x: 50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
-  }
-
   return (
-    <section className="py-20 px-6 bg-cream">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="font-script text-5xl md:text-6xl text-center text-burgundy mb-20">
-          Our Story
-        </h2>
+    <section className="section-padding bg-[#FBF8F4]">
+      <div className="container">
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Left - Image placeholder */}
+        <SectionHeader label="How it began" heading="Our Story" />
+
+        <div className="grid md:grid-cols-2 gap-14 lg:gap-20 items-center">
+
+          {/* Image frame */}
           <motion.div
-            ref={leftRef}
-            variants={leftVariants}
+            variants={fadeLeft}
             initial="hidden"
-            animate={leftInView ? 'visible' : 'hidden'}
+            whileInView="visible"
+            viewport={{ once: true }}
             className="relative"
           >
-            <div className="bg-white rounded-lg shadow-xl p-6 border-4 border-rose/20 aspect-square flex items-center justify-center">
-              <div className="text-center">
-                <svg
-                  className="w-24 h-24 mx-auto text-rose/30 mb-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10.5 1.5H5.75A4.25 4.25 0 001.5 5.75v8.5A4.25 4.25 0 005.75 18.5h8.5a4.25 4.25 0 004.25-4.25V9.5M18.5 1.5l-9 9m0 0l4 4m-4-4l-4 4" />
-                </svg>
-                <p className="text-rose text-lg font-medium">Your photo here</p>
-              </div>
+            <div
+              className="aspect-[4/5] bg-[#EDE3D6] flex items-center justify-center relative overflow-hidden"
+              style={{ boxShadow: '0 20px 50px rgba(122,15,27,0.12)' }}
+            >
+              <div className="absolute inset-4 border border-[#9E1B25]/15 pointer-events-none" style={{ boxShadow: '0 20px 50px rgba(122,15,27,0.12)' }} />
+              <img
+                src={myAlways}
+                alt="Our story"
+                className="w-full h-full object-cover"
+              />
             </div>
+            {/* Shadow offset frame */}
+            <div
+              className="absolute -bottom-3 -right-3 w-full h-full -z-10"
+              style={{ border: '1px solid rgba(158,27,37,0.12)' }}
+            />
           </motion.div>
 
-          {/* Right - Story text */}
+          {/* Text */}
           <motion.div
-            ref={rightRef}
-            variants={rightVariants}
+            variants={fadeRight}
             initial="hidden"
-            animate={rightInView ? 'visible' : 'hidden'}
-            className="space-y-6"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="space-y-8"
           >
-            <div className="space-y-4">
-              <h3 className="text-2xl font-semibold text-burgundy">How it all started</h3>
-              <p className="text-gray-700 leading-relaxed text-lg">
-                Our story began in the most magical way. Every moment since then has been special, every glance filled with love, and every day brings us closer to our perfect future together.
+            <div className="space-y-3">
+              <h3
+                className="heading-display"
+                style={{ fontSize: '1.65rem' }}
+              >
+                How it all started
+              </h3>
+              <p className="prose-body">
+                Our story started the most random way ever. I wasn't even trying to make a move on you, and you only thought of me as a friend. You even had someone else at the time... Anywayyss replying to your note was the best decision ever. 
+                
+                I can't believe 
+                we started all because of cerelac. 
               </p>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-2xl font-semibold text-burgundy">Why we love this day</h3>
-              <p className="text-gray-700 leading-relaxed text-lg">
-                It's not just a date on the calendar. It was the day our hearts found each other. The day our life's most important story began. Everything changed from that moment.
+            <div
+              className="w-10 h-px"
+              style={{ background: 'rgba(158,27,37,0.25)' }}
+            />
+
+            <div className="space-y-3">
+              <h3
+                className="heading-display"
+                style={{ fontSize: '1.65rem' }}
+              >
+                The day it all started
+              </h3>
+              <p className="prose-body">
+                From the start, you had me. From the first time we spent the entire day together,
+                swimming in the morning, and then jabi after, and then pier 88 for dinner, every 
+                conversation we had just kept flowing. 
+                And not just that, every conversation hit very close to my heart.
+                We talked about everything, we laughed about small things, we even opened up and put our borders down to talk about deep stuff.
+                You made me feel safe and that I could tell you anything.
+                That's when I knew I didn't ever want to let go of you.
+
               </p>
             </div>
 
-            <div className="flex gap-4 pt-4">
-              <div className="flex-1 bg-blush rounded-lg p-4 text-center">
-                <p className="text-burgundy font-semibold text-sm mb-1">Start Date</p>
-                <p className="text-2xl font-script text-burgundy">November 6, 2025</p>
-              </div>
-              <div className="flex-1 bg-blush rounded-lg p-4 text-center">
-                <p className="text-burgundy font-semibold text-sm mb-1">Meeting Place</p>
-                <p className="text-2xl font-script text-burgundy">Moscow Region</p>
-              </div>
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              {[
+                { label: 'First Padadat', value: 'Oct 15, 2025' },
+                { label: 'Where',          value: 'Liloan, Cebu' },
+              ].map(({ label, value }) => (
+                <div
+                  key={label}
+                  className="text-center p-5"
+                  style={{
+                    background: '#F5EFE6',
+                    border: '1px solid var(--col-border)',
+                  }}
+                >
+                  <p className="section-label mb-2">{label}</p>
+                  <p
+                    className="heading-display"
+                    style={{ fontSize: '1.1rem' }}
+                  >
+                    {value}
+                  </p>
+                </div>
+              ))}
             </div>
           </motion.div>
+
         </div>
       </div>
     </section>

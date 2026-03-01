@@ -1,100 +1,93 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import SectionHeader from './SectionHeader'
 
-const CounterCard = ({ value, label, index }) => {
+const UNITS = [
+  { key: 'days',    label: 'Days' },
+  { key: 'hours',   label: 'Hours' },
+  { key: 'minutes', label: 'Minutes' },
+  { key: 'seconds', label: 'Seconds' },
+]
+
+function CounterCard({ value, label, index }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="bg-white rounded-2xl p-8 shadow-lg border-2 border-rose/20 flex flex-col items-center justify-center"
+      transition={{ duration: 0.6, delay: index * 0.09 }}
+      viewport={{ once: true }}
+      className="relative"
     >
-      <motion.div
-        key={value}
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="text-5xl md:text-6xl font-bold text-rose mb-3"
+      {/* Corner brackets */}
+      {[
+        'top-0 left-0 border-t border-l -translate-x-1 -translate-y-1',
+        'top-0 right-0 border-t border-r translate-x-1 -translate-y-1',
+        'bottom-0 left-0 border-b border-l -translate-x-1 translate-y-1',
+        'bottom-0 right-0 border-b border-r translate-x-1 translate-y-1',
+      ].map((cls, i) => (
+        <span
+          key={i}
+          className={`absolute w-3 h-3 ${cls}`}
+          style={{ borderColor: 'rgba(158,27,37,0.28)' }}
+        />
+      ))}
+
+      <div
+        className="text-center py-9 px-4"
+        style={{
+          background: '#FBF8F4',
+          border: '1px solid var(--col-border)',
+        }}
       >
-        {String(value).padStart(2, '0')}
-      </motion.div>
-      <p className="text-gray-600 text-sm font-medium uppercase tracking-widest">{label}</p>
+        <motion.span
+          key={value}
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className="block heading-display mb-2"
+          style={{ fontSize: 'clamp(2.4rem, 5.5vw, 3.5rem)', color: '#7A0F1B' }}
+        >
+          {String(value).padStart(2, '0')}
+        </motion.span>
+        <span
+          className="section-label"
+          style={{ color: 'var(--col-text-light)' }}
+        >
+          {label}
+        </span>
+      </div>
     </motion.div>
   )
 }
 
 export default function Counter() {
-  const [time, setTime] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  })
+  const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
 
   useEffect(() => {
-    // use Philippines local time (UTC+8) for the start date
-    const startDate = new Date('2025-11-06T00:00:00+08:00').getTime()
-
-    const updateCounter = () => {
-      const now = new Date().getTime()
-      const distance = now - startDate
-
-      if (distance >= 0) {
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24))
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000)
-
-        setTime({ days, hours, minutes, seconds })
-      }
+    const start = new Date('2025-11-06T00:00:00+08:00').getTime()
+    const tick = () => {
+      const d = Date.now() - start
+      if (d >= 0) setTime({
+        days:    Math.floor(d / 86400000),
+        hours:   Math.floor((d % 86400000) / 3600000),
+        minutes: Math.floor((d % 3600000)  / 60000),
+        seconds: Math.floor((d % 60000)    / 1000),
+      })
     }
-
-    updateCounter()
-    const timer = setInterval(updateCounter, 1000)
-    return () => clearInterval(timer)
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
   }, [])
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
   return (
-    <section className="py-20 px-6 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="font-script text-5xl md:text-6xl text-burgundy mb-4">
-            How much
-          </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Time has passed since we've become official
-          </p>
-        </motion.div>
-
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"
-        >
-          <CounterCard value={time.days} label="Days" index={0} />
-          <CounterCard value={time.hours} label="Hours" index={1} />
-          <CounterCard value={time.minutes} label="Minutes" index={2} />
-          <CounterCard value={time.seconds} label="Seconds" index={3} />
-        </motion.div>
-
-        {/* Timeline */}
-       
+    <section className="section-padding bg-[#F5EFE6]">
+      <div className="container">
+        <SectionHeader label="Together since" heading="Our Time Together" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {UNITS.map(({ key, label }, i) => (
+            <CounterCard key={key} value={time[key]} label={label} index={i} />
+          ))}
+        </div>
       </div>
     </section>
   )
